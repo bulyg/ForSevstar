@@ -8,5 +8,7 @@ data class ResponseWeather(
     @Expose
     val weather: List<Weather>,
     @Expose
-    val main: Main
+    val main: Main,
+    @Expose
+    val name: String
 )

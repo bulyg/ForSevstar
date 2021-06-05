@@ -109,6 +109,10 @@ class MainActivity : MvpAppCompatActivity(), MainView {
         tv_item_weather_desc.text = desc
     }
 
+    override fun setName(name: String) {
+        tv_item_weather_name.text = name
+    }
+
     override fun showAlertDialog() {
         AlertDialog.Builder(this)
             .setTitle(R.string.error)

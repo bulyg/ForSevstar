@@ -8,6 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import moxy.InjectViewState
 import moxy.MvpPresenter
 import ru.bulyg.forsevstar.mvp.model.repository.ApiRepository
+import ru.bulyg.forsevstar.mvp.model.response.ResponseWeather
 import ru.bulyg.forsevstar.mvp.view.MainView
 import ru.bulyg.forsevstar.utils.exception.NoInternetException
 import java.text.SimpleDateFormat
@@ -41,12 +42,7 @@ class MainPresenter : MvpPresenter<MainView>() {
             repository.loadWeather(lat, lon, metric, apiKey)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    entries.add(Entry(it.main.temp.toFloat(), entries.size))
-                    labels.add(getCurrentDate())
-                    viewState.setTemp("${(it.main.temp).toInt()}°C")
-                    viewState.setIcon("http://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png")
-                    viewState.setDescription(it.weather[0].description)
-                    viewState.update()
+                    setViewState(it)
                 }, {
                     if (it is NoInternetException) {
                         viewState.showAlertDialog()
@@ -55,6 +51,16 @@ class MainPresenter : MvpPresenter<MainView>() {
                     }
                 })
         )
+    }
+
+    fun setViewState(response: ResponseWeather) {
+        entries.add(Entry(response.main.temp.toFloat(), entries.size))
+        labels.add(getCurrentDate())
+        viewState.setTemp("${(response.main.temp).toInt()}°C")
+        viewState.setIcon("http://openweathermap.org/img/wn/${response.weather[0].icon}@2x.png")
+        viewState.setDescription(response.weather[0].description)
+        viewState.setName(response.name)
+        viewState.update()
     }
 
     @SuppressLint("SimpleDateFormat")

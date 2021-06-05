@@ -10,6 +10,7 @@ interface MainView : MvpView {
     fun setTemp(temp: String)
     fun setIcon(url: String)
     fun setDescription(desc: String)
+    fun setName(name: String)
     fun showAlertDialog()
     fun update()
     fun setBtnTitle()
