@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_weather_desc_text_size">28sp</dimen>
+    <dimen name="item_weather_degree_text_size">40sp</dimen>
+    <dimen name="tv_item_weather_name">25sp</dimen>
+</resources>
