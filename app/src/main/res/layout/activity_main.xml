@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/teal_700"
     android:fillViewport="true"
     android:padding="8dp"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -15,23 +16,25 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/teal_200"
         android:orientation="vertical">
 
         <include
             android:id="@+id/include"
             layout="@layout/item_weather" />
 
-        <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/bar_chart_activity_main"
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart_activity_main"
             android:layout_width="match_parent"
-            android:layout_height="175dp" />
+            android:layout_height="200dp" />
 
         <Button
             android:id="@+id/btn_activity_main_start"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@string/find_out_the_weather" />
+            android:backgroundTint="@color/teal_700"
+            android:text="@string/Start" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 

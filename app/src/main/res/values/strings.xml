@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">ForSevstar</string>
-    <string name="clear_sky">Clear sky</string>
-    <string name="item_weather_temp_degree">13°C</string>
-    <string name="find_out_the_weather">Узнать погоду</string>
+    <string name="Start">Start</string>
+    <string name="error">Error</string>
+    <string name="msg">No internet connection</string>
+    <string name="ok">OK</string>
 </resources>
