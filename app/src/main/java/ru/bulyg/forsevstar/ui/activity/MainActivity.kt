@@ -5,7 +5,9 @@ import android.app.AlertDialog
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import kotlinx.android.synthetic.main.activity_main.*
@@ -14,6 +16,7 @@ import moxy.MvpAppCompatActivity
 import moxy.presenter.InjectPresenter
 import moxy.presenter.ProvidePresenter
 import ru.bulyg.forsevstar.App
+import ru.bulyg.forsevstar.BuildConfig
 import ru.bulyg.forsevstar.R
 import ru.bulyg.forsevstar.mvp.presenter.MainPresenter
 import ru.bulyg.forsevstar.mvp.view.MainView
@@ -22,7 +25,8 @@ import ru.bulyg.forsevstar.utils.glide.loadImage
 class MainActivity : MvpAppCompatActivity(), MainView {
     companion object {
         const val PERMISSION_ID = 9999
-        private const val API_KEY = "701a359473e328b8aca9171eabd53ace"
+        //для запуска запихать api_key в файл local.properties
+        private const val API_KEY = BuildConfig.API_KEY
     }
 
     @InjectPresenter
@@ -38,6 +42,7 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     private var lat = 0.0
     private var lon = 0.0
     private var metric = "metric"
+    private var isClicked = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,18 +51,41 @@ class MainActivity : MvpAppCompatActivity(), MainView {
     }
 
     override fun init() {
+        initLocation()
+        initListener()
+        initLineChart()
+    }
+
+    private fun initLocation() {
+        getCoordinates()
+        Toast.makeText(this, "Updating coordinates", Toast.LENGTH_LONG).show()
+        btn_activity_main_start.isEnabled = false
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (lat != 0.0) {
+                btn_activity_main_start.isEnabled = true
+                Toast.makeText(this, "Your coordinates have been updated", Toast.LENGTH_SHORT)
+                    .show()
+            } else init()
+        }, 5000)
+    }
+
+    private fun initListener() {
         btn_activity_main_start.setOnClickListener {
-            getCoordinates()
-            it.postDelayed({
+            if (isClicked) {
+                isClicked = false
+                presenter.clear()
+                btn_activity_main_start.text = getString(R.string.start)
+            } else {
+                isClicked = true
+                btn_activity_main_start.text = getString(R.string.stop)
                 presenter.loadData(
                     String.format("%.2f", lat),
                     String.format("%.2f", lon),
                     metric,
                     API_KEY
                 )
-            }, 1000)
+            }
         }
-        initLineChart()
     }
 
     private fun initLineChart() {
@@ -90,6 +118,15 @@ class MainActivity : MvpAppCompatActivity(), MainView {
             }.show()
     }
 
+    override fun update() {
+        initLineChart()
+    }
+
+    override fun setBtnTitle() {
+        btn_activity_main_start.text = getString(R.string.start)
+        isClicked = false
+    }
+
     private fun getCoordinates() {
         val locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -98,12 +135,23 @@ class MainActivity : MvpAppCompatActivity(), MainView {
                 lon = lastLocation.longitude
             }
         }
+        setRequest()
+        checkPermission()
+        locationProviderClient.requestLocationUpdates(
+            locationRequest, locationCallback, Looper.myLooper()
+        )
+    }
+
+    private fun setRequest() {
         locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = 0
         locationRequest.fastestInterval = 0
-        locationRequest.numUpdates = 3
+        locationRequest.numUpdates = 10
         locationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+    }
+
+    private fun checkPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -115,9 +163,6 @@ class MainActivity : MvpAppCompatActivity(), MainView {
             requestPermission()
             return
         }
-        locationProviderClient.requestLocationUpdates(
-            locationRequest, locationCallback, Looper.myLooper()
-        )
     }
 
     private fun requestPermission() {

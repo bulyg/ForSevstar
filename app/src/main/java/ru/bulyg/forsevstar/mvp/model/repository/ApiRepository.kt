@@ -19,7 +19,7 @@ class ApiRepository(val api: ApiService, val networkStatus: NetworkStatus) {
         networkStatus.isOnline().flatMap { isOnline ->
             if (isOnline) {
                 Observable
-                    .interval(0, 1000, TimeUnit.MILLISECONDS)
+                    .interval(0, 5000, TimeUnit.MILLISECONDS)
                     .switchMap {
                         api.loadWeather(lat, lon, metric, apiKey).switchMap {
                             just(it)

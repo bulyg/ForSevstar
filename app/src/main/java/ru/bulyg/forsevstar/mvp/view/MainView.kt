@@ -11,4 +11,6 @@ interface MainView : MvpView {
     fun setIcon(url: String)
     fun setDescription(desc: String)
     fun showAlertDialog()
+    fun update()
+    fun setBtnTitle()
 }

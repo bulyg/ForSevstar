@@ -18,6 +18,14 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        def apiKey  = properties.getProperty("api_key", "")
+        it.buildConfigField "String", "API_KEY", apiKey
+        it.resValue 'string', "api_key", apiKey
+    }
+
     buildTypes {
         release {
             minifyEnabled false

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">ForSevstar</string>
-    <string name="Start">Start</string>
+    <string name="start">Start</string>
     <string name="error">Error</string>
     <string name="msg">No internet connection</string>
     <string name="ok">OK</string>
+    <string name="stop">Stop</string>
 </resources>

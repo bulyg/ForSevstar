@@ -46,11 +46,13 @@ class MainPresenter : MvpPresenter<MainView>() {
                     viewState.setTemp("${(it.main.temp).toInt()}°C")
                     viewState.setIcon("http://openweathermap.org/img/wn/${it.weather[0].icon}@2x.png")
                     viewState.setDescription(it.weather[0].description)
-                    viewState.init()
+                    viewState.update()
                 }, {
-                    if (it is NoInternetException)
+                    if (it is NoInternetException) {
                         viewState.showAlertDialog()
-                    compositeDisposable.clear()
+                        viewState.setBtnTitle()
+                        clear()
+                    }
                 })
         )
     }
@@ -69,6 +71,11 @@ class MainPresenter : MvpPresenter<MainView>() {
 
     override fun detachView(view: MainView?) {
         super.detachView(view)
+        compositeDisposable.clear()
+        viewState.setBtnTitle()
+    }
+
+    fun clear() {
         compositeDisposable.clear()
     }
 }

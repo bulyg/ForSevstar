@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@color/teal_700"
-            android:text="@string/Start" />
+            android:text="@string/start" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
 
